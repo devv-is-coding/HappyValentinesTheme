@@ -4,11 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HAPPY VALENTINE'S DAY</title>
+
+    <!-- Cute Google Fonts: Quicksand for body text, Dancing Script for handwritten touches -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Decorative floating hearts drifting in the background (pure CSS animation) -->
+    <div class="floating-hearts" aria-hidden="true">
+        <span>❤️</span>
+        <span>💕</span>
+        <span>💖</span>
+        <span>❤️</span>
+        <span>💗</span>
+        <span>💕</span>
+        <span>❤️</span>
+        <span>💖</span>
+    </div>
+
     <div class="wrapper">
-        <!-- Column 1 -->
+        <!-- Column 1: The letter inside an envelope -->
         <div class="column1">
             <div class="container">
                 <div class="envelope-wrapper">
@@ -16,56 +35,110 @@
                         <div class="letter">
                             <div class="text">
                                 <strong>Dearest Thea,</strong>
-                                <p> 
-                                    From the depths of my heart, thank you—for accepting me as I am, for standing by me even in my worst of my life, and for being my unwavering supporter. Your love is my greatest comfort, and your presence, my greatest joy.
-                                    I love you so much bibii❤️ 
+                                <p>
+                                    From the depths of my heart, thank you—for accepting me as I am, for standing by me even in the worst of my life, and for being my unwavering supporter. Your love is my greatest comfort, and your presence, my greatest joy.
+                                    I love you so much bibii❤️
                                 </p>
                             </div>
                         </div>
                     </div>
                     <div class="heart"></div>
                 </div>
+                <p class="hint">👆 click the envelope to open it</p>
             </div>
         </div>
 
-        <!-- Column 2 -->
+        <!-- Column 2: The cute little proposal -->
         <div class="column2">
             <div class="separator-box">
                 <div class="audio-container" id="yt-container">
                     <iframe id="yt-player" width="0" height="0" frameborder="0" allow="autoplay"></iframe>
                 </div>
-                <H2>Would you date me this Feb 14? </H2>
-                <img src="https://media.tenor.com/LRDMe1QpqFYAAAAC/cat-cute.gif" alt="GIF">
-                <button class="playAudio" id="playAudio" onclick="playAudio()">Play Audio</button>
-                <button class="yesBTN" id="yesBTN" onclick="yesButton()">Yes</button>
-                <button class="noBTN" id="noBTN">No</button>
+
+                <!-- The question + gif + buttons live here, and get swapped for the success message -->
+                <div class="question-content" id="questionContent">
+                    <h2>Would you date me this Feb 14? 💘</h2>
+                    <p class="subtitle">(no pressure, but the correct answer is "Yes" 😉)</p>
+
+                    <div class="gif-frame">
+                        <img src="https://media.tenor.com/LRDMe1QpqFYAAAAC/cat-cute.gif" alt="Cute begging cat GIF">
+                    </div>
+
+                    <button class="playAudio" id="playAudio" onclick="playAudio()">🎵 Play Our Song</button>
+
+                    <div class="button-group">
+                        <button class="yesBTN" id="yesBTN" onclick="yesButton()">Yes</button>
+                        <button class="noBTN" id="noBTN">No</button>
+                    </div>
+                </div>
+
+                <!-- Hidden until "Yes" is clicked -->
+                <div class="success-message" id="successMessage">
+                    <p class="success-text">Yeyyy! 🎉 I knew it! I love you so much bibi ❤️</p>
+                    <span class="success-emoji">🥰</span>
+                    <button class="playAudio" onclick="window.location.reload()">Play Again 🔁</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="text/javascript">
-        // Envelope opening animation
+        // ----- Envelope opening animation -----
         const envelope = document.querySelector('.envelope-wrapper');
         envelope.addEventListener('click', () => {
             envelope.classList.toggle('flap');
         });
-        // YouTube Audio Control
-        let player = document.getElementById("yt-player");
 
-        playAudio = () => {
-            player.src = "https://www.youtube.com/embed/4adZ7AguVcw?autoplay=1"; // Fixed URL
+        // ----- YouTube Audio Control -----
+        const player = document.getElementById("yt-player");
+
+        const playAudio = () => {
+            player.src = "https://www.youtube.com/embed/4adZ7AguVcw?autoplay=1";
         }
-        yesButton = () => {
-            alert("Yeyy! Iloooveyoooouuu pooo");
-            window.location.reload();
+
+        // ----- "Yes" button: reveal the success message -----
+        const yesButton = () => {
+            document.getElementById("questionContent").style.display = "none";
+            document.getElementById("successMessage").classList.add("show");
         }
-        const moveRandomEl = (e) => {
-            e.style.position = "absolute";
-            e.style.top = Math.floor(Math.random() * 90 + 5) + "%";
-            e.style.left = Math.floor(Math.random() * 90 + 5) + "%";
+
+        // ----- "No" button: it gets shy and runs away, and its text gets cuter every time -----
+        const noMessages = [
+            "No", "Are you sure?", "Really sure?", "Think again!",
+            "Last chance...", "Pretty please? 🥺", "I'll be sad 😢", "Okay fine, but... 👉👈"
+        ];
+        let noHoverCount = 0;
+        let yesScale = 1;
+
+        const noBTN = document.getElementById("noBTN");
+        const yesBTN = document.getElementById("yesBTN");
+
+        // Fling the button to a random spot ANYWHERE on the page (fixed = viewport),
+        // while keeping the whole button on-screen so it never scrolls out of reach.
+        const moveRandomEl = (btn) => {
+            btn.style.position = "fixed";
+            btn.style.zIndex = "999";
+            const maxX = Math.max(0, window.innerWidth - btn.offsetWidth);
+            const maxY = Math.max(0, window.innerHeight - btn.offsetHeight);
+            btn.style.left = Math.floor(Math.random() * maxX) + "px";
+            btn.style.top = Math.floor(Math.random() * maxY) + "px";
         }
-        const moveRandomBTN = document.getElementById("noBTN").addEventListener("mouseenter", (e) => {
-            moveRandomEl(e.target);
+
+        noBTN.addEventListener("mouseenter", () => {
+            // Change the text FIRST, so we measure (and contain) the final width.
+            if (noHoverCount < noMessages.length - 1) {
+                noHoverCount++;
+            }
+            noBTN.textContent = noMessages[noHoverCount];
+
+            // Then place it within the bounded play area.
+            moveRandomEl(noBTN);
+
+            // Make the "Yes" button a little more tempting each time (but not huge)
+            if (yesScale < 1.3) {
+                yesScale += 0.05;
+                yesBTN.style.transform = `scale(${yesScale})`;
+            }
         });
     </script>
 </body>

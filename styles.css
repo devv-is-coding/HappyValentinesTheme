@@ -1,33 +1,103 @@
+/* =========================================================
+   Happy Valentine's Theme  💌
+   A cute little "Will you date me?" page.
+   Colors are kept as CSS variables so they're easy to tweak.
+   ========================================================= */
+
 :root {
-    --primary: #fff;
-    --bg-color: rgb(167, 113, 144);
-    --bg-envelope-color: #f5edd1;
-    --envelope-tab: #ecdeb8;
-    --envelope-cover: #e6cfa7;
-    --shadow-color: rgba(0,0,0,0.2);
-    --txt-color: #444;
-    --heart-color: rgba(252,8,231);
+    --primary: #fffdfa;               /* letter paper */
+    --bg-color-1: #ffd6e8;            /* soft pink */
+    --bg-color-2: #ffc2d1;            /* rosy pink */
+    --bg-envelope-color: #fff0f5;     /* envelope body */
+    --envelope-tab: #ffc0d3;          /* envelope flap */
+    --envelope-cover: #ff9ebb;        /* envelope front */
+    --shadow-color: rgba(214, 51, 108, 0.25);
+    --txt-color: #6b3f52;             /* soft plum text */
+    --accent: #ff5c8a;                /* main heart / accent pink */
+    --accent-soft: #ffe0ec;           /* button background */
+    --heart-color: #ff4d88;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    background: var(--bg-color);
+    min-height: 100vh;
+    /* Dreamy pink gradient background */
+    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
     display: flex;
     align-items: center;
     justify-content: center;
-    height: auto;
-}
-H2{
-  color: var(--txt-color);
-  text-align: center;
+    font-family: 'Quicksand', 'Segoe UI', sans-serif;
+    overflow-x: hidden;
 }
 
+h2 {
+    color: var(--accent);
+    text-align: center;
+    font-weight: 700;
+    font-size: 24px;
+    margin: 0 0 4px;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--txt-color);
+    font-size: 13px;
+    margin: 0 0 16px;
+    opacity: 0.85;
+}
+
+/* ---------------------------------------------------------
+   Floating hearts in the background
+   --------------------------------------------------------- */
+.floating-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;   /* so they never block clicks */
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-hearts span {
+    position: absolute;
+    bottom: -40px;
+    font-size: 22px;
+    opacity: 0.7;
+    animation: floatUp 12s linear infinite;
+}
+
+/* Spread the hearts across the screen with different sizes and speeds */
+.floating-hearts span:nth-child(1) { left: 8%;  font-size: 18px; animation-duration: 11s; animation-delay: 0s; }
+.floating-hearts span:nth-child(2) { left: 20%; font-size: 26px; animation-duration: 14s; animation-delay: 2s; }
+.floating-hearts span:nth-child(3) { left: 35%; font-size: 16px; animation-duration: 10s; animation-delay: 4s; }
+.floating-hearts span:nth-child(4) { left: 50%; font-size: 30px; animation-duration: 15s; animation-delay: 1s; }
+.floating-hearts span:nth-child(5) { left: 63%; font-size: 20px; animation-duration: 12s; animation-delay: 3s; }
+.floating-hearts span:nth-child(6) { left: 76%; font-size: 24px; animation-duration: 13s; animation-delay: 5s; }
+.floating-hearts span:nth-child(7) { left: 88%; font-size: 18px; animation-duration: 11s; animation-delay: 2.5s; }
+.floating-hearts span:nth-child(8) { left: 95%; font-size: 28px; animation-duration: 16s; animation-delay: 0.5s; }
+
+@keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg);      opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.7; }
+    100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+
+/* ---------------------------------------------------------
+   Page layout
+   --------------------------------------------------------- */
 .wrapper {
+    position: relative;
+    z-index: 1;              /* sit above the floating hearts */
     display: flex;
+    gap: 24px;
     width: 100%;
-    height: auto;
+    max-width: 1000px;
+    padding: 30px;
     min-height: 500px;
 }
 
@@ -38,35 +108,67 @@ H2{
     justify-content: center;
 }
 
+.container {
+    display: grid;
+    place-items: center;
+    gap: 20px;
+}
+
+.hint {
+    color: var(--txt-color);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+    animation: gentlePulse 2s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.05); }
+}
+
+/* The card holding the question */
 .column2 {
     position: relative;
-    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .separator-box {
-    width: 80%;
-    height: 80%;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    box-shadow: 0px 0px 10px var(--shadow-color);
+    width: 100%;
+    max-width: 380px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(6px);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    box-shadow: 0 12px 30px var(--shadow-color);
+    padding: 30px 26px;
+    text-align: center;
 }
 
-.container{
-    height: 100vh;
-    display:grid;
-    place-items:center;
-}
-.container > .envelope-wrapper{
+/* ---------------------------------------------------------
+   Envelope + letter
+   --------------------------------------------------------- */
+.envelope-wrapper {
+    position: relative;   /* anchor the heart to the envelope, not the page layout */
     background-color: var(--bg-envelope-color);
-    box-sizing: 0 0 40px var(--shadow-color);
-
+    box-shadow: 0 12px 30px var(--shadow-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
 }
-.container > .envelope-wrapper > .envelope{
+
+.envelope-wrapper:hover {
+    /* subtle lift only (no scale, so the heart never appears to shift) */
+    box-shadow: 0 18px 38px var(--shadow-color);
+}
+
+.envelope {
     position: relative;
     width: 300px;
-    height: 230px;   
+    height: 230px;
 }
-.container > .envelope-wrapper > .envelope::before{
+
+.envelope::before {
     content: '';
     position: absolute;
     z-index: 2;
@@ -75,9 +177,10 @@ H2{
     border-left: 150px solid transparent;
     top: 0;
     transform-origin: top;
-    transition:all 0.5s ease-in-out 0.7s;
+    transition: all 0.5s ease-in-out 0.7s;
 }
-.container > .envelope-wrapper > .envelope::after{
+
+.envelope::after {
     content: '';
     position: absolute;
     z-index: 2;
@@ -86,39 +189,65 @@ H2{
     border-left: 150px solid var(--envelope-cover);
     border-bottom: 100px solid var(--envelope-cover);
     bottom: 0;
+    border-radius: 0 0 8px 8px;
 }
-.letter{
+
+.letter {
     position: absolute;
-    right: 20%;
-    bottom: 0;
-    width: 54%;
-    height: 80%;
+    left: 50%;
+    bottom: 140px;
+    width: 250px;
     background: var(--primary);
-    transition: all 1s ease-in-out;
-    padding: 20px 10px;
-    box-shadow: 0 0 10px var(--shadow-color);
+    border-radius: 8px;
+    padding: 22px 20px;
+    box-shadow: 0 4px 14px var(--shadow-color);
+    /* Closed: tucked down, shrunk and invisible. We ONLY animate transform +
+       opacity (both smooth) — never width/height, which would snap. */
+    transform: translateX(-50%) translateY(60px) scale(0.6);
+    transform-origin: center bottom;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;              /* behind the envelope flap while closed */
+    transition: transform 0.9s ease-in-out, opacity 0.6s ease-in-out;
 }
-.letter > .text{
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 10px;
+
+.letter > .text {
+    font-size: 13px;
+    line-height: 1.55;
     color: var(--txt-color);
     text-align: left;
 }
-.heart{
+
+.letter > .text strong {
+    display: block;
+    font-family: 'Dancing Script', cursive;
+    font-size: 24px;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+/* The wax-seal heart on the envelope */
+.heart {
     position: absolute;
-    top: 50%;
-    left: 25%;
+    top: 55%;               /* sit right on the V where the flap meets */
+    left: 50%;
     width: 15px;
     height: 15px;
     background: var(--heart-color);
     z-index: 4;
-    transform: translate(-50%, -20%) rotate(45deg);
-    transition: transform 0.5s ease-in-out 1s;
-    box-shadow: 0 0 10px var(--shadow-color);
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: transform 0.4s ease;
+    box-shadow: 0 0 12px var(--shadow-color);
     cursor: pointer;
 }
+
+/* Hover teaser (only while closed): the heart dips down, like it's coming loose */
+.envelope-wrapper:not(.flap):hover .heart {
+    transform: translate(-50%, 10%) rotate(40deg);
+}
+
 .heart::before,
-.heart::after{
+.heart::after {
     content: '';
     position: absolute;
     width: 15px;
@@ -126,297 +255,191 @@ H2{
     background: var(--heart-color);
     border-radius: 50%;
 }
-.heart::before{
-    top: -7.5px;
-}
-.heart::after{
-    right: 7.5px;
-}
-.flap > .envelope::before{
+
+.heart::before { top: -7.5px; }
+.heart::after  { right: 7.5px; }
+
+/* Opened state */
+.flap > .envelope::before {
     z-index: 0;
     transform: rotateX(180deg);
-    transition-duration: 0.5;
+    transition-duration: 0.5s;
 }
-.flap > .envelope .letter{
-    bottom: 110px;
-    transform: scale(1.5);
-    transition-delay: 1.60s;
-    z-index: 2;
+
+.flap > .envelope .letter {
+    /* Open: rise up to full size and fade in, sitting in FRONT of the flap.
+       Only transform + opacity change, so the motion is smooth. */
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 6;              /* above the flap (z-index 2) and heart (z-index 4) */
+    box-shadow: 0 16px 34px var(--shadow-color);
+    transition-delay: 1.3s;  /* wait for the flap to finish opening first */
 }
-.flap > .heart{
-    transform: rotate(90deg);
-    transition-delay:0.4s;
+
+.flap > .heart {
+    /* on open: stays centered and spins, echoing the original animation */
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition-delay: 0.4s;
 }
+
+/* ---------------------------------------------------------
+   GIF frame
+   --------------------------------------------------------- */
+.gif-frame {
+    display: inline-block;
+    padding: 8px;
+    background: #fff;
+    border: 3px solid var(--accent-soft);
+    border-radius: 20px;
+    box-shadow: 0 6px 16px var(--shadow-color);
+    margin: 6px 0 18px;
+}
+
+.gif-frame img {
+    display: block;
+    width: 180px;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* ---------------------------------------------------------
+   Hidden audio iframe
+   --------------------------------------------------------- */
 .audio-container {
-    width: 100%;
-    max-width: 400px;
-    position: relative;
-    padding-top: 56.25%; /* 16:9 Aspect Ratio */
-    display: none; /* Hides video */
-}
-iframe {
     position: absolute;
-    width: 100%;
-    height: 100%;
-}
-button {
-    margin-top: 10px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
 }
 
+/* ---------------------------------------------------------
+   Buttons
+   --------------------------------------------------------- */
 .playAudio {
-  align-items: center;
-  background-color: #fee6e3;
-  border: 2px solid #111;
-  border-radius: 8px;
-  box-sizing: border-box;
-  color: #111;
-  cursor: pointer;
-  display: flex;
-  font-family: Inter,sans-serif;
-  font-size: 16px;
-  height: 48px;
-  justify-content: center;
-  line-height: 24px;
-  max-width: 100%;
-  padding: 0 25px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  right: 90%;
-  bottom: -4%;
-}
-
-.playAudio:after {
-  background-color: #111;
-  border-radius: 8px;
-  content: "";
-  display: block;
-  height: 48px;
-  left: 0;
-  width: 100%;
-  position: absolute;
-  top: -2px;
-  transform: translate(8px, 8px);
-  transition: transform .2s ease-out;
-  z-index: -1;
-}
-
-.playAudio:hover:after {
-  transform: translate(0, 0);
-}
-
-.playAudio:active {
-  background-color: #ffdeda;
-  outline: 0;
+    background-color: var(--accent-soft);
+    border: 2px solid var(--accent);
+    border-radius: 30px;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 22px;
+    margin: 0 0 18px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .playAudio:hover {
-  outline: 0;
+    background-color: var(--accent);
+    color: #fff;
+    transform: translateY(-2px);
 }
 
-@media (min-width: 768px) {
-  .playAudio {
-    padding: 0 40px;
-  }
+.playAudio:active {
+    transform: translateY(0);
 }
-img{
-    width: 80%;
-    height: auto;
-    margin-left: 10%;
-    margin-top: 10%;
+
+/* Keep Yes and No side by side (the No flings itself across the page on hover) */
+.button-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-height: 60px;
+}
+
+.yesBTN,
+.noBTN {
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 30px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .yesBTN {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  display: inline-flex;
-  fill: currentcolor;
-  font-family: "Google Sans",Roboto,Arial,sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: .25px;
-  line-height: normal;
-  max-width: 100%;
-  overflow: visible;
-  padding: 2px 24px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: auto;
-  will-change: transform,opacity;
-  z-index: 0;
-  left: 35%;
-  bottom: 10%;
+    background: linear-gradient(135deg, #ff6f9c, var(--accent));
+    color: #fff;
+    box-shadow: 0 6px 16px var(--shadow-color);
 }
 
 .yesBTN:hover {
-  background: #F6F9FE;
-  color: #174ea6;
-}
-
-.yesBTN:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
-  outline: none;
-}
-
-.yesBTN:focus {
-  outline: none;
-  border: 2px solid #4285f4;
-}
-
-.yesBTN:not(:disabled) {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
-}
-
-.yesBTN:not(:disabled):hover {
-  box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
-}
-
-.yesBTN:not(:disabled):focus {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
-}
-
-.yesBTN:not(:disabled):active {
-  box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
-}
-
-.yesBTN:disabled {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 22px var(--shadow-color);
 }
 
 .noBTN {
-  align-items: center;
-  appearance: none;
-  background-color: #fff;
-  border-radius: 24px;
-  border-style: none;
-  box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
-  box-sizing: border-box;
-  color: #3c4043;
-  cursor: pointer;
-  display: inline-flex;
-  fill: currentcolor;
-  font-family: "Google Sans",Roboto,Arial,sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  height: 48px;
-  justify-content: center;
-  letter-spacing: .25px;
-  line-height: normal;
-  max-width: 100%;
-  overflow: visible;
-  padding: 2px 24px;
-  position: relative;
-  text-align: center;
-  text-transform: none;
-  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: auto;
-  will-change: transform,opacity;
-  z-index: 0;
-  left: 40%;
-  bottom: 10%;
+    background: #fff;
+    color: var(--txt-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .noBTN:hover {
-  background: #F6F9FE;
-  color: #174ea6;
+    background: #f3f3f3;
 }
 
-.noBTN:active {
-  box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
-  outline: none;
+/* ---------------------------------------------------------
+   Success message (shown after clicking Yes)
+   --------------------------------------------------------- */
+.success-message {
+    display: none;
 }
 
-.noBTN:focus {
-  outline: none;
-  border: 2px solid #4285f4;
+.success-message.show {
+    display: block;
+    animation: popIn 0.5s ease;
 }
 
-.noBTN:not(:disabled) {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+.success-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 12px;
+    line-height: 1.3;
 }
 
-.noBTN:not(:disabled):hover {
-  box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+.success-emoji {
+    display: block;
+    font-size: 64px;
+    margin: 10px 0 20px;
+    animation: bounce 1.2s ease-in-out infinite;
 }
 
-.noBTN:not(:disabled):focus {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+@keyframes popIn {
+    0%   { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
 }
 
-.noBTN:not(:disabled):active {
-  box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
 }
 
-.noBTN:disabled {
-  box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
-}
-/* Responsive Design */
+/* ---------------------------------------------------------
+   Responsive Design — stack columns on small screens
+   --------------------------------------------------------- */
 @media (max-width: 768px) {
-  .wrapper {
-      flex-direction: column; /* Stack elements vertically */
-      height: auto;
-      width: 90%;
-  }
+    .wrapper {
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+    }
 
-  .column1, .column2 {
-      flex: none;
-      width: 400px;
-      padding: 20px;
-  }
+    .column1, .column2 {
+        width: 100%;
+    }
 
-  .container {
-      height: 100vh;
-      width: 100%;
-      max-width: 300px;
-      padding: 20px;
-  }
-  .heart{
-    margin-left: 135px;
-    margin-top: 60px;
-  }
+    .envelope {
+        transform: scale(0.85);
+    }
 
-  img {
-      width: 150px;
-      height: auto;
-      margin-left: 90px;
-  }
-
-  button {
-      width: 100%;
-      font-size: 16px;
-      padding: 12px;
-  }
-  .yesBTN,.noBTN {
-    position: relative;
-    width: 10%;
-    margin-right: 10px;
-    align-items: center;
-    bottom: 40px;
-  }
-  .playAudio{
-    margin-left: 350px;
-    margin-bottom: 10px;
-    width: 60%;
-    top: -400px;
-  }
+    .separator-box {
+        max-width: 100%;
+    }
 }
